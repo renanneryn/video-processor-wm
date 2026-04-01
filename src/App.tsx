@@ -4,7 +4,6 @@ import {
   Terminal, 
   Shield, 
   Video, 
-  Copy, 
   Check, 
   Download, 
   Info, 
@@ -13,10 +12,8 @@ import {
   EyeOff,
   AlertCircle
 } from 'lucide-react';
-import { getPythonScript } from './script_template';
 
 export default function App() {
-  const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [watermark, setWatermark] = useState('@suamarca');
   const [watermarkEnabled, setWatermarkEnabled] = useState(true);
@@ -48,26 +45,6 @@ export default function App() {
     }, 3000);
     return () => clearInterval(interval);
   }, [motionEnabled]);
-
-  const handleCopy = () => {
-    const script = getPythonScript({ watermark, opacity, motionEnabled, watermarkEnabled });
-    navigator.clipboard.writeText(script);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const downloadScript = () => {
-    const script = getPythonScript({ watermark, opacity, motionEnabled, watermarkEnabled });
-    const blob = new Blob([script], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'process_video.py';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
 
   const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -197,23 +174,6 @@ export default function App() {
                   </div>
                 </motion.div>
               )}
-
-              <div className="pt-4 space-y-3">
-                <button 
-                  onClick={handleCopy}
-                  className="w-full flex items-center justify-between p-4 border border-[#141414] hover:bg-[#141414] hover:text-[#E4E3E0] transition-colors group"
-                >
-                  <span className="font-mono text-xs uppercase tracking-widest">Copiar Script</span>
-                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4 group-hover:scale-110 transition-transform" />}
-                </button>
-                <button 
-                  onClick={downloadScript}
-                  className="w-full flex items-center justify-between p-4 border border-[#141414] hover:bg-[#141414] hover:text-[#E4E3E0] transition-colors group"
-                >
-                  <span className="font-mono text-xs uppercase tracking-widest">Baixar .PY</span>
-                  <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-                </button>
-              </div>
             </div>
           </section>
 
@@ -229,29 +189,16 @@ export default function App() {
             </div>
           </section>
 
-          <section className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <Shield className="w-4 h-4" />
-              <h2 className="font-serif italic text-sm uppercase tracking-wider">Bypass Social Analysis</h2>
+          <section className="p-4 border border-dashed border-[#141414]/30 rounded-sm bg-[#141414]/5">
+            <div className="flex gap-3">
+              <Shield className="w-4 h-4 shrink-0 mt-0.5" />
+              <div className="space-y-2">
+                <h3 className="font-mono text-[10px] uppercase font-bold">Proteção de Identidade Digital</h3>
+                <p className="text-[11px] leading-relaxed opacity-70">
+                  Higienização de Dados: Remove rastros ocultos de origem e edição.
+                </p>
+              </div>
             </div>
-            <ul className="space-y-3 font-mono text-[10px] uppercase tracking-tight opacity-80">
-              <li className="flex items-start gap-2">
-                <Check className="w-3 h-3 shrink-0 text-green-600" />
-                <span>Hash Alteration: O zoom aleatório muda cada pixel do vídeo.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-3 h-3 shrink-0 text-green-600" />
-                <span>Duration Shift: O padding de 0.5s altera o tempo total.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-3 h-3 shrink-0 text-green-600" />
-                <span>Metadata Scrub: Remove rastro de câmeras e softwares.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-3 h-3 shrink-0 text-green-600" />
-                <span>Motion Watermark: Impede detecção de padrões estáticos.</span>
-              </li>
-            </ul>
           </section>
         </aside>
 
@@ -287,7 +234,7 @@ export default function App() {
                     <div className="p-12 border-2 border-dashed border-[#141414]/20 rounded-lg flex flex-col items-center gap-4 hover:border-[#141414]/40 transition-colors relative group">
                       <Video className="w-12 h-12 opacity-20 group-hover:opacity-40 transition-opacity" />
                       <div className="space-y-1">
-                        <p className="font-serif italic text-lg">Arraste seu vídeo aqui</p>
+                        <p className="font-serif italic text-lg">Clique ou arraste seu vídeo</p>
                         <p className="font-mono text-[10px] uppercase opacity-50">Máximo 10MB | MP4, MOV, AVI</p>
                       </div>
                       <input 
@@ -341,29 +288,10 @@ export default function App() {
                     )}
                   </div>
 
-                  <div className="max-w-2xl w-full p-6 bg-[#141414]/5 rounded border border-[#141414]/10">
-                    <h3 className="font-mono text-[10px] uppercase font-bold mb-4 flex items-center gap-2">
-                      <Terminal className="w-3 h-3" />
-                      O que acontece no processamento?
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-[9px] uppercase leading-relaxed opacity-70">
-                      <div className="space-y-2">
-                        <p className="font-bold text-[#141414]">1. Limpeza Atômica</p>
-                        <p>Remoção total de metadados (GPS, Dispositivo, Software de edição).</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="font-bold text-[#141414]">2. Alteração de Hash</p>
-                        <p>Zoom randômico de 1-3% e padding de 0.5s para criar um arquivo único.</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="font-bold text-[#141414]">3. Stealth Watermark</p>
-                        <p>Marca d'água sub-perceptível com movimento randômico anti-IA.</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="font-bold text-[#141414]">4. Re-encoding</p>
-                        <p>Conversão para H.264 com perfil de compatibilidade social.</p>
-                      </div>
-                    </div>
+                  <div className="max-w-2xl w-full p-6 bg-[#141414]/5 rounded border border-[#141414]/10 text-center">
+                    <p className="font-mono text-[10px] uppercase tracking-widest opacity-70">
+                      Nós processamos seu vídeo para que ele transpareça mais limpo para as redes sociais sem detectar conteúdo duplicado.
+                    </p>
                   </div>
                 </motion.div>
               ) : (
