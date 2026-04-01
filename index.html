@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Stealth Processor</title>
+    <script>
+      // Prevent "Cannot set property fetch of #<Window> which has only a getter"
+      // This happens when a library tries to overwrite window.fetch in environments where it's read-only.
+      (function() {
+        try {
+          const originalFetch = window.fetch;
+          if (originalFetch) {
+            Object.defineProperty(window, 'fetch', {
+              get: function() { return originalFetch; },
+              set: function(v) { 
+                console.warn('A library attempted to overwrite window.fetch. This was prevented to avoid a TypeError.');
+              },
+              configurable: true
+            });
+          }
+        } catch (e) {
+          // Fail silently if we can't redefine it
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

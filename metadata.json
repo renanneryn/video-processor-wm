@@ -1,0 +1,5 @@
+{
+  "name": "Video Stealth Processor",
+  "description": "A tool for cleaning video metadata, resizing for social media, and adding discreet watermarks using FFmpeg.",
+  "requestFramePermissions": []
+}
