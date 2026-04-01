@@ -1,5 +1,5 @@
 {
   "name": "Video Stealth Processor",
-  "description": "A tool for cleaning video metadata, resizing for social media, and adding discreet watermarks using FFmpeg.",
+  "description": "Ferramenta avançada desenvolvida por Texla Soluctions para processamento de vídeos com foco em privacidade e proteção de identidade digital.",
   "requestFramePermissions": []
 }
